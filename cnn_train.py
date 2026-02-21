@@ -2,6 +2,7 @@ import numpy as np
 from tensorflow import keras
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+from tensorflow.keras import layers
 
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()  # (60000,28,28)    
 
@@ -11,9 +12,6 @@ x_test  = (x_test.astype("float32") / 255.0)[..., np.newaxis]   # (10000,28,28,1
 
 print(x_train.shape, y_train.shape)
 print(x_test.shape, y_test.shape)
-
-from tensorflow import keras
-from tensorflow.keras import layers
 
 model = keras.Sequential([
     layers.Input(shape=(28, 28, 1)),

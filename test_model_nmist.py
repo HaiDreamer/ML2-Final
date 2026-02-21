@@ -17,7 +17,7 @@ def preprocess_to_mnist_vector(img_path: str) -> np.ndarray:
     img = Image.open(img_path).convert("L")          # grayscale
     img = img.resize((28, 28), Image.Resampling.LANCZOS)
 
-    arr = np.array(img, dtype=np.float32)            # PIL -> numpy :contentReference[oaicite:1]{index=1}
+    arr = np.array(img, dtype=np.float32)            # PIL -> numpy 
 
     # Optional auto-invert:
     # MNIST digits are bright on dark background; if your image is dark-on-white, invert it.

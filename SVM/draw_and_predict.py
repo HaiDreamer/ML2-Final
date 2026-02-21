@@ -5,15 +5,19 @@ from scipy.ndimage import center_of_mass, shift
 from skimage.transform import resize
 from skimage.feature import hog
 import joblib
+from pathlib import Path
 
 class DrawingApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Vẽ Số - Dự Đoán Chữ Số")
+        self.root.title("Draw number - Guess Number")
         
         # Load model và scaler
-        self.model = joblib.load("./svm_hog_model.joblib")
-        self.scaler = joblib.load("./scaler.joblib")
+        # self.model = joblib.load("./svm_hog_model.joblib")
+        # self.scaler = joblib.load("./scaler.joblib")
+        MODEL_DIR = Path(r"D:\ML2-Final\saved_models")
+        self.model = joblib.load(MODEL_DIR / "svm_hog_model.joblib")
+        self.scaler = joblib.load(MODEL_DIR / "scaler.joblib")
         
         # Thiết lập canvas
         self.canvas_width = 600

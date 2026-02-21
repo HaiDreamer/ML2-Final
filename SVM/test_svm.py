@@ -7,9 +7,13 @@ from skimage.color import rgb2gray, rgba2rgb
 from skimage.transform import resize
 from skimage.feature import hog
 import joblib
+from pathlib import Path
 
-model = joblib.load("./svm_hog_model.joblib")
-scaler = joblib.load("./scaler.joblib")
+# model = joblib.load("./svm_hog_model.joblib")
+# scaler = joblib.load("./scaler.joblib")
+MODEL_DIR = Path(r"D:\ML2-Final\saved_models")      # adjust as your own model location
+model = joblib.load(MODEL_DIR / "svm_hog_model.joblib")
+scaler = joblib.load(MODEL_DIR / "scaler.joblib")
 
 # Load image and preprocess
 img_path = "../test_images/30_00005.png"
