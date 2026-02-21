@@ -8,3 +8,6 @@ NMIST dataset
 
 https://s3.amazonaws.com/nist-srd/SD19/by_field.zip with hand label each have around 300 labels for each digit
     Path to dataset files(my own): C:\Users\Admin/.keras/datasets/mnist.npz
+
+# Model folder 
+https://drive.google.com/drive/folders/1HXzi0Hy4E1RIZ3y0BjdfmPuffVgnqybx?usp=sharing
