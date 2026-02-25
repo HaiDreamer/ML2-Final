@@ -21,7 +21,7 @@ def preprocess_to_mnist_vector(img_path: str) -> np.ndarray:
 
     # Optional auto-invert:
     # MNIST digits are bright on dark background; if your image is dark-on-white, invert it.
-    # Heuristic: if background is mostly bright, invert.
+    #   if background is mostly bright, invert.
     if arr.mean() > 127:
         arr = 255.0 - arr
 

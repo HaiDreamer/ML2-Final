@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from PIL import Image, ImageOps
 
-# ----- CONFIG -----
+# CONFIG
 TARGET_SIZE = (128, 128)
 
 INPUT_DIRS = [
@@ -14,7 +14,7 @@ INPUT_DIRS = [
 OUTPUT_DIRS = [
     r"C:\Users\Admin\OneDrive\Desktop\1\test_resize",
     r"C:\Users\Admin\OneDrive\Desktop\1\train_resize",
-    r"C:\Users\Admin\OneDrive\Desktop\1\train_resize",  # <-- fix below
+    r"C:\Users\Admin\OneDrive\Desktop\1\train_resize",
 ]
 
 # Fix output list (typo-safe)

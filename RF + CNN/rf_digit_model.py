@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Random Forest model for handwritten digit classification.
 
@@ -31,7 +30,7 @@ import matplotlib.pyplot as plt
 import joblib
 import time
 
-# ========================= CONFIG =========================
+# CONFIG
 BASE_DIR = Path(__file__).resolve().parent
 TRAIN_VAL_DIR = BASE_DIR / "dataset-digit" / "archive"   # Kaggle dataset
 TEST_DIR = BASE_DIR / "dataset-digit" / "Test"            # Custom test set
@@ -44,7 +43,6 @@ N_ESTIMATORS = 300        # Random Forest trees
 RANDOM_STATE = 42
 VAL_RATIO = 0.2           # 20% of archive data for validation
 TEST_RATIO = 0.2          # 20% of archive data for internal test
-# ==========================================================
 
 
 def preprocess_digit(img):
@@ -162,16 +160,14 @@ def evaluate_model(model, X, y_true, set_name: str):
 
 
 def main():
-    print("=" * 60)
     print("  Random Forest - Handwritten Digit Classification")
-    print("=" * 60)
 
-    # -------- 1. Load all archive data (~20k images) --------
+    # Load all archive data (~20k images)
     print(f"\n[1] Loading ALL data from: {TRAIN_VAL_DIR}")
     X_all, y_all = load_images_from_folder(TRAIN_VAL_DIR)
     print(f"    Shape: X={X_all.shape}, y={y_all.shape}")
 
-    # -------- 2. Split into Train / Validation / Test (60% / 20% / 20%) --------
+    # Split into Train / Validation / Test (60% / 20% / 20%)
     train_ratio = 1 - VAL_RATIO - TEST_RATIO
     print(f"\n[2] Splitting: Train {train_ratio*100:.0f}% / Val {VAL_RATIO*100:.0f}% / Test {TEST_RATIO*100:.0f}%")
 
@@ -195,12 +191,12 @@ def main():
     print(f"    Validation:     {X_val.shape[0]} samples")
     print(f"    Internal Test:  {X_internal_test.shape[0]} samples")
 
-    # -------- 3. Combine Train + Validation for training --------
+    # Combine Train + Validation for training
     X_train_combined = np.concatenate([X_train, X_val], axis=0)
     y_train_combined = np.concatenate([y_train, y_val], axis=0)
     print(f"\n[3] Combined Train+Val for training: {X_train_combined.shape[0]} samples")
 
-    # -------- 4. Build pipeline: Scaler + PCA + RF --------
+    # Build pipeline: Scaler + PCA + RF
     print(f"\n[4] Building pipeline: StandardScaler -> PCA({N_COMPONENTS}) -> RandomForest({N_ESTIMATORS} trees)")
     pipeline = Pipeline([
         ("scaler", StandardScaler()),
@@ -213,7 +209,7 @@ def main():
         )),
     ])
 
-    # -------- 5. Train on Train + Val --------
+    # Train on Train + Val
     print("\n[5] Training Random Forest on Train+Val...")
     t0 = time.time()
     pipeline.fit(X_train_combined, y_train_combined)
@@ -222,43 +218,41 @@ def main():
 
     n_pca = pipeline.named_steps["pca"].n_components_
     explained = pipeline.named_steps["pca"].explained_variance_ratio_.sum()
-    print(f"    PCA: {784} -> {n_pca} dimensions (explained variance: {explained:.4f})")
+    print(f"PCA: {784} -> {n_pca} dimensions (explained variance: {explained:.4f})")
 
-    # -------- 6. Evaluate on Internal Test (same dataset) --------
+    # Evaluate on Internal Test (same dataset)
     print(f"\n[6] Evaluating on INTERNAL TEST set ({X_internal_test.shape[0]} samples - same dataset)")
     X_int_transformed = pipeline.named_steps["scaler"].transform(X_internal_test)
     X_int_transformed = pipeline.named_steps["pca"].transform(X_int_transformed)
-    internal_test_acc = evaluate_model(pipeline.named_steps["rf"], X_int_transformed, y_internal_test, "INTERNAL TEST (same dataset)")
+    internal_test_acc = evaluate_model(pipeline.named_steps["rf"], X_int_transformed, y_internal_test, "INTERNAL TEST")
 
-    # -------- 7. Load & Evaluate on External Test set (dataset-digit/Test) --------
+    # Load & Evaluate on External Test set (dataset-digit/Test)
     print(f"\n[7] Loading EXTERNAL TEST data from: {TEST_DIR}")
     X_ext_test, y_ext_test = load_images_from_folder(TEST_DIR)
-    print(f"    Shape: X={X_ext_test.shape}, y={y_ext_test.shape}")
+    print(f"Shape: X={X_ext_test.shape}, y={y_ext_test.shape}")
 
     print(f"\n[8] Evaluating on EXTERNAL TEST set ({X_ext_test.shape[0]} samples)")
     X_ext_transformed = pipeline.named_steps["scaler"].transform(X_ext_test)
     X_ext_transformed = pipeline.named_steps["pca"].transform(X_ext_transformed)
-    external_test_acc = evaluate_model(pipeline.named_steps["rf"], X_ext_transformed, y_ext_test, "EXTERNAL TEST (new data)")
+    external_test_acc = evaluate_model(pipeline.named_steps["rf"], X_ext_transformed, y_ext_test, "EXTERNAL TEST")
 
-    # -------- 8. Save model --------
+    # Save model
     SAVE_DIR.mkdir(parents=True, exist_ok=True)
     joblib.dump(pipeline, MODEL_PATH)
     print(f"\n[9] Model saved to: {MODEL_PATH}")
 
-    # -------- Summary --------
-    print("\n" + "=" * 60)
-    print("  SUMMARY")
-    print("=" * 60)
-    print(f"  Total archive samples:      {X_all.shape[0]}")
-    print(f"  Train samples:              {X_train.shape[0]}")
-    print(f"  Validation samples:         {X_val.shape[0]}")
-    print(f"  Train+Val (used to train):  {X_train_combined.shape[0]}")
-    print(f"  Internal Test samples:      {X_internal_test.shape[0]}")
-    print(f"  External Test samples:      {X_ext_test.shape[0]}")
-    print(f"  PCA dimensions:             {n_pca}")
-    print(f"  Internal Test Accuracy:     {internal_test_acc:.4f}")
-    print(f"  External Test Accuracy:     {external_test_acc:.4f}")
-    print("=" * 60)
+    # Summary
+    print("SUMMARY")
+    print(f"Total archive samples: {X_all.shape[0]}")
+    print(f"Train samples: {X_train.shape[0]}")
+    print(f"Validation samples: {X_val.shape[0]}")
+    print(f"Train+Val (used to train): {X_train_combined.shape[0]}")
+    print(f"Internal Test samples: {X_internal_test.shape[0]}")
+    print(f"External Test samples: {X_ext_test.shape[0]}")
+    print(f"PCA dimensions: {n_pca}")
+    print(f"Internal Test Accuracy: {internal_test_acc:.4f}")
+    print(f"External Test Accuracy: {external_test_acc:.4f}")
+
 
 
 if __name__ == "__main__":

@@ -148,7 +148,7 @@ class DrawingApp:
         # Predict
         prediction = self.model.predict(hog_scaled)
         confidence = self.model.decision_function(hog_scaled)
-        max_confidence = np.max(confidence)
+        max_confidence = np.max(confidence)   
         
         self.result_label.config(
             text=f"Predicted number: {prediction[0]} (Confidence: {max_confidence:.2f})",
